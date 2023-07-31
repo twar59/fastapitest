@@ -9,7 +9,17 @@ from sqlalchemy.sql import select
 from typing import Dict
 import models
 
-app = FastAPI()
+description = """
+This API app helps you do awesome stuff. 🚀
+
+"""
+
+app = FastAPI(
+        title="Atlas API app",
+        description=description,
+        version="0.1.0",
+        summary="This is a summary of this app"
+        )
 
 class Item(BaseModel):
     id:int

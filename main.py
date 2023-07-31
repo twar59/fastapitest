@@ -1,12 +1,9 @@
-import uvicorn
-from typing import Optional, List
-
 from fastapi import FastAPI, status, HTTPException
 from pydantic import BaseModel
 from database import SessionLocal, engine
 from sqlalchemy.exc import OperationalError
 from sqlalchemy.sql import select
-from typing import Dict
+from typing import Dict, List
 import models
 
 description = """
@@ -35,6 +32,7 @@ db = SessionLocal()
 
 @app.get("/status", response_model=Dict[str, str])
 def get_status():
+    breakpoint()
     try:
         with engine.connect() as connection:
             connection.execute(select(1))
@@ -96,8 +94,3 @@ def delete_item(item_id: int):
     db.commit()
 
     return item_to_delete
-
-
-# for debugging purposes
-if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8000)

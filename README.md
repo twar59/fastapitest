@@ -24,4 +24,9 @@ Or simply click:
 
 ## Thanks
 
-Thanks to [Harish](https://harishgarg.com) for the [inspiration to create a FastAPI quickstart for Render](https://twitter.com/harishkgarg/status/1435084018677010434) and for some sample code!
+Thanks to [Harish](https://harishgarg.com) for the [inspiration to create a FastAPI quickstart for Render](https://twitter.com/harishkgarg/status/1435084018677010434) and for some sample code!python -m venv ../api_env
+source ../api_env/bin/activate
+deactivate
+pip install -r requirements.txt
+uvicorn main:app --host 0.0.0.0 --port 8080
+uvicorn main:app --reload

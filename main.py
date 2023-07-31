@@ -3,8 +3,10 @@ from typing import Optional, List
 
 from fastapi import FastAPI, status, HTTPException
 from pydantic import BaseModel
-from starlette.status import HTTP_200_OK
-from database import SessionLocal
+from database import SessionLocal, engine
+from sqlalchemy.exc import OperationalError
+from sqlalchemy.sql import select
+from typing import Dict
 import models
 
 app = FastAPI()
@@ -21,13 +23,23 @@ class Item(BaseModel):
 
 db = SessionLocal()
 
+@app.get("/status", response_model=Dict[str, str])
+def get_status():
+    try:
+        with engine.connect() as connection:
+            connection.execute(select(1))
+            return {"status": "OK"}
+
+    except OperationalError:
+        raise HTTPException(status_code=500, detail="Failed to connect to the database.")
+
 @app.get('/items', response_model=List[Item], status_code=200)
 def get_all_items():
     items = db.query(models.Item).all()
     
     return items
 
-@app.get('/item/{item_id}', response_model=Item, status_code=HTTP_200_OK)
+@app.get('/item/{item_id}', response_model=Item, status_code=status.HTTP_200_OK)
 def get_item(item_id: int):
     item = db.query(models.Item).filter(models.Item.id == item_id).first()
     return item
